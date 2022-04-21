@@ -7,7 +7,6 @@ runtime-benchmarks = [
     'frame-system/runtime-benchmarks',
     'hex-literal',
     'pallet-balances/runtime-benchmarks',
-    'pallet-template/runtime-benchmarks',
     'pallet-timestamp/runtime-benchmarks',
     'sp-runtime/runtime-benchmarks',
 ]
@@ -22,7 +21,6 @@ std = [
     'pallet-balances/std',
     'pallet-grandpa/std',
     'pallet-sudo/std',
-    'pallet-template/std',
     'pallet-timestamp/std',
     'pallet-transaction-payment-rpc-runtime-api/std',
     'pallet-transaction-payment/std',
@@ -52,6 +50,11 @@ std = [
     'pallet-octopus-appchain/std',
     'pallet-octopus-lpos/std',
     'pallet-octopus-upward-messages/std',
+    "pallet-utils/std",
+	"pallet-cv/std",
+    "pallet-certificate/std",
+	"pallet-cv-rpc-runtime-api/std",
+	"node-primitives/std",
 ]
 
 [build-dependencies]
@@ -74,8 +77,6 @@ targets = ['x86_64-unknown-linux-gnu']
 codec = { package = 'parity-scale-codec', version = '2.0.0', default-features = false, features = ['derive'] }
 hex-literal = { version = '0.3.4', optional = true }
 scale-info = { version = '1.0', default-features = false, features = ['derive'] }
-
-pallet-template = { path = '../pallets/template', version = '3.0.0', default-features = false }
 
 frame-benchmarking = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13', default-features = false, optional = true }
 frame-system-benchmarking = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13', default-features = false, optional = true }
@@ -102,6 +103,8 @@ sp-session = { git = 'https://github.com/paritytech/substrate.git', branch = 'po
 sp-std = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13', default-features = false }
 sp-transaction-pool = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13', default-features = false }
 sp-version = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13', default-features = false }
+node-primitives = { version = "2.0.0", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.13" }
+
 
 static_assertions = '1.1.0'
 log = { version = '0.4.14', default-features = false }
@@ -121,3 +124,13 @@ sp-staking = { git = 'https://github.com/paritytech/substrate.git', branch = 'po
 pallet-octopus-appchain = { git = 'https://github.com/octopus-network/octopus-pallets.git', branch = 'release-v0.9.13', default-features = false }
 pallet-octopus-lpos = { git = 'https://github.com/octopus-network/octopus-pallets.git', branch = 'release-v0.9.13', default-features = false }
 pallet-octopus-upward-messages = { git = 'https://github.com/octopus-network/octopus-pallets.git', branch = 'release-v0.9.13', default-features = false }
+
+# SVC-chain Dependencies
+pallet-utils = { version = "0.0.1", default-features = false, path = "../pallets/utils" }
+pallet-account = { version = "1.0.0", default-features = false, path = "../pallets/account" }
+# pallet-sys-man = { version = "0.0.1", default-features = false,path = "../pallets/sys-man"}
+pallet-cv = { version = "1.0.0", default-features = false, path = "../pallets/cv" }
+
+pallet-certificate = { version = "1.0.0", default-features = false, path = "../pallets/certificate" }
+
+pallet-cv-rpc-runtime-api = { version = "1.0.0", default-features = false, path = "../pallets/cv/rpc/runtime-api" }

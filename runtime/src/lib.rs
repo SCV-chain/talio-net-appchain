@@ -58,8 +58,7 @@ use sp_runtime::{
 };
 use static_assertions::const_assert;
 
-/// Import the template pallet.
-pub use pallet_template;
+pub use pallet_cv::Item;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -644,8 +643,24 @@ impl pallet_sudo::Config for Runtime {
 	type Call = Call;
 }
 
-/// Configure the pallet-template in pallets/template.
-impl pallet_template::Config for Runtime {
+impl pallet_utils::Config for Runtime {
+	type Event = Event;
+	type Currency = Balances;
+}
+
+impl pallet_account::Config for Runtime {
+	type Event = Event;
+}
+
+// impl pallet_sys_man::Config for Runtime {
+// 	type Event = Event;
+// }
+
+impl pallet_cv::Config for Runtime {
+	type Event = Event;
+}
+
+impl pallet_certificate::Config for Runtime {
 	type Event = Event;
 }
 
@@ -675,8 +690,13 @@ construct_runtime!(
 		MmrLeaf: pallet_beefy_mmr,
 		Uniques: pallet_uniques,
 		Sudo: pallet_sudo,
-		// Include the custom logic from the pallet-template in the runtime.
-		TemplateModule: pallet_template,
+		//governance pallets
+		//scv-chian pallets
+		Account: pallet_account,
+		Utils: pallet_utils,
+		// SysMan: pallet_sys_man,
+		Cv: pallet_cv,
+		Certificate: pallet_certificate,
 	}
 );
 
