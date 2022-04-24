@@ -7,7 +7,7 @@
 
 use std::sync::Arc;
 
-use appchain_barnacle_runtime::{opaque::Block, AccountId, Balance, BlockNumber, Hash, Index};
+use appchain_barnacle_runtime::{opaque::Block, AccountId, Balance, BlockNumber, Hash, Index, Time};
 use sc_client_api::AuxStore;
 use sc_consensus_babe::{Config, Epoch};
 use sc_consensus_babe_rpc::BabeRpcHandler;
@@ -98,6 +98,7 @@ where
 	C::Api: pallet_transaction_payment_rpc::TransactionPaymentRuntimeApi<Block, Balance>,
 	C::Api: BabeApi<Block>,
 	C::Api: BlockBuilder<Block>,
+	C::Api: pallet_cv_rpc_runtime_api::CvApi<Block, AccountId, BlockNumber, Time>,
 	P: TransactionPool + 'static,
 	SC: SelectChain<Block> + 'static,
 	B: sc_client_api::Backend<Block> + Send + Sync + 'static,
@@ -158,6 +159,8 @@ where
 			beefy.subscription_executor,
 		),
 	));
+
+	io.extend_with(pallet_cv_rpc::CvApi::to_delegate(pallet_cv_rpc::CvItem::new(client.clone())));
 
 	Ok(io)
 }

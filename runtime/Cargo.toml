@@ -61,10 +61,10 @@ std = [
 substrate-wasm-builder = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
 
 [package]
-authors = ['Octopus Network <hi@oct.network>']
-description = 'A fresh FRAME-based Substrate runtime, ready for hacking.'
+authors = ['Talio-net']
+description = 'A fresh FRAME-based Substrate runtime, build a beautiful CV.'
 edition = '2021'
-homepage = 'https://oct.network/'
+homepage = 'https://talio-net.com/'
 license = 'Apache-2.0'
 name = 'appchain-barnacle-runtime'
 publish = false

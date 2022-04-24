@@ -9,7 +9,7 @@ use sc_service::PartialComponents;
 
 impl SubstrateCli for Cli {
 	fn impl_name() -> String {
-		"Substrate Node".into()
+		"Talio-net Appchain".into()
 	}
 
 	fn impl_version() -> String {
@@ -25,7 +25,7 @@ impl SubstrateCli for Cli {
 	}
 
 	fn support_url() -> String {
-		"support.anonymous.an".into()
+		"https://github.com/SCV-chain/talio-net-appchain".into()
 	}
 
 	fn copyright_start_year() -> i32 {
@@ -37,6 +37,7 @@ impl SubstrateCli for Cli {
 			"dev" => Box::new(chain_spec::development_config()?),
 			"" | "local" => Box::new(chain_spec::local_testnet_config()?),
 			"octopus-testnet" => Box::new(chain_spec::octopus_testnet_config()?),
+			"talio-testnet" => Box::new(chain_spec::cv_testnet_config()?),
 			path =>
 				Box::new(chain_spec::ChainSpec::from_json_file(std::path::PathBuf::from(path))?),
 		})

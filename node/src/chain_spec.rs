@@ -1,8 +1,9 @@
 use appchain_barnacle_runtime::{
 	opaque::Block, opaque::SessionKeys, AccountId, BabeConfig, Balance, BalancesConfig,
 	GenesisConfig, GrandpaConfig, ImOnlineConfig, OctopusAppchainConfig, OctopusLposConfig,
-	SessionConfig, Signature, SudoConfig, SystemConfig, DOLLARS, WASM_BINARY,
+	SessionConfig, Signature, SudoConfig, SystemConfig, DOLLARS, WASM_BINARY, AuraConfig, 
 };
+
 use beefy_primitives::crypto::AuthorityId as BeefyId;
 use pallet_im_online::sr25519::AuthorityId as ImOnlineId;
 use pallet_octopus_appchain::AuthorityId as OctopusId;
@@ -13,6 +14,13 @@ use sp_consensus_babe::AuthorityId as BabeId;
 use sp_core::{sr25519, Pair, Public};
 use sp_finality_grandpa::AuthorityId as GrandpaId;
 use sp_runtime::traits::{IdentifyAccount, Verify};
+use sp_consensus_aura::sr25519::AuthorityId as AuraId;
+
+
+use sc_service::Properties;
+use crate::testnet_fixtures;
+
+const DEFAULT_PROTOCOL_ID: &str = "talio-net";
 
 // The URL for the telemetry server.
 // const STAGING_TELEMETRY_URL: &str = "wss://telemetry.polkadot.io/submit/";
@@ -235,4 +243,117 @@ fn testnet_genesis(
 			key: root_key,
 		},
 	}
+}
+
+/// Configure initial storage state for FRAME modules.
+fn cv_testnet_genesis(
+	wasm_binary: &[u8],
+	initial_authorities: Vec<(AccountId, BabeId, GrandpaId, ImOnlineId, BeefyId, OctopusId)>,
+	root_key: AccountId,
+	endowed_accounts: Option<Vec<AccountId>>,
+	_enable_println: bool,
+) -> GenesisConfig {
+	let mut endowed_accounts: Vec<AccountId> = endowed_accounts.unwrap_or_else(|| {
+		vec![
+			get_account_id_from_seed::<sr25519::Public>("Alice"),
+			get_account_id_from_seed::<sr25519::Public>("Bob"),
+			get_account_id_from_seed::<sr25519::Public>("Charlie"),
+			get_account_id_from_seed::<sr25519::Public>("Dave"),
+			get_account_id_from_seed::<sr25519::Public>("Eve"),
+			get_account_id_from_seed::<sr25519::Public>("Ferdie"),
+		]
+	});
+	// endow all authorities.
+	initial_authorities.iter().map(|x| &x.0).for_each(|x| {
+		if !endowed_accounts.contains(x) {
+			endowed_accounts.push(x.clone())
+		}
+	});
+
+	let validators = initial_authorities.iter().map(|x| (x.0.clone(), STASH)).collect::<Vec<_>>();
+
+	const ENDOWMENT: Balance = 10_000_000 * DOLLARS;
+	const STASH: Balance = 100 * 1_000_000_000_000_000_000; // 100 OCT with 18 decimals
+
+	GenesisConfig {
+		system: SystemConfig {
+			// Add Wasm runtime to storage.
+			code: wasm_binary.to_vec(),
+		},
+		balances: BalancesConfig {
+			balances: endowed_accounts.iter().cloned().map(|x| (x, ENDOWMENT)).collect(),
+		},
+		session: SessionConfig {
+			keys: initial_authorities
+				.iter()
+				.map(|x| {
+					(
+						x.0.clone(),
+						x.0.clone(),
+						session_keys(
+							x.1.clone(),
+							x.2.clone(),
+							x.3.clone(),
+							x.4.clone(),
+							x.5.clone(),
+						),
+					)
+				})
+				.collect::<Vec<_>>(),
+		},
+		babe: BabeConfig {
+			authorities: vec![],
+			epoch_config: Some(appchain_barnacle_runtime::BABE_GENESIS_EPOCH_CONFIG),
+		},
+		im_online: ImOnlineConfig { keys: vec![] },
+		grandpa: GrandpaConfig { authorities: vec![] },
+		transaction_payment: Default::default(),
+		beefy: Default::default(),
+		octopus_appchain: OctopusAppchainConfig {
+			anchor_contract: "".to_string(),
+			asset_id_by_name: vec![("usdc.testnet".to_string(), 0)],
+			validators,
+			premined_amount: 1024 * DOLLARS,
+		},
+		octopus_lpos: OctopusLposConfig { era_payout: 2 * DOLLARS, ..Default::default() },
+		octopus_assets: Default::default(),
+		sudo: SudoConfig {
+			// Assign network admin rights.
+			key: root_key,
+		},
+	}
+}
+
+pub fn cv_testnet_config() -> Result<ChainSpec, String> {
+    let wasm_binary = WASM_BINARY.ok_or("Staging wasm binary not available".to_string())?;
+
+    Ok(ChainSpec::from_genesis(
+        "Talio_Testnet",
+        "talio_testnet",
+        ChainType::Live,
+        move || cv_testnet_genesis(
+            wasm_binary,
+			testnet_fixtures::get_cv_initial_authorities(),
+            /* Sudo Account */
+            testnet_fixtures::get_testnet_root_key(),
+            testnet_fixtures::get_endownment_account(),
+            true,
+        ),
+        vec![],
+		None,
+        Some(DEFAULT_PROTOCOL_ID),
+        Some(cv_properties()),
+        Default::default(),
+    ))
+}
+
+
+pub fn cv_properties() -> Properties {
+	let mut properties = Properties::new();
+
+	properties.insert("ss58Format".into(), 48.into());
+	properties.insert("tokenDecimals".into(), 18.into());
+	properties.insert("tokenSymbol".into(), "SCV".into());
+
+	properties
 }

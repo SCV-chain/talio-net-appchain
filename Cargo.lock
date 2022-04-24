@@ -122,7 +122,11 @@ dependencies = [
  "beefy-primitives",
  "frame-benchmarking",
  "frame-benchmarking-cli",
+ "hex-literal",
  "jsonrpc-core",
+ "node-primitives",
+ "pallet-cv-rpc",
+ "pallet-cv-rpc-runtime-api",
  "pallet-im-online",
  "pallet-mmr-rpc",
  "pallet-octopus-appchain",
@@ -155,6 +159,7 @@ dependencies = [
  "sp-block-builder",
  "sp-blockchain",
  "sp-consensus",
+ "sp-consensus-aura",
  "sp-consensus-babe",
  "sp-core",
  "sp-finality-grandpa",
@@ -4132,6 +4137,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallet-cv-rpc"
+version = "1.0.0"
+dependencies = [
+ "jsonrpc-core",
+ "jsonrpc-core-client",
+ "jsonrpc-derive",
+ "pallet-cv",
+ "pallet-cv-rpc-runtime-api",
+ "parity-scale-codec 3.1.2",
+ "sp-api",
+ "sp-blockchain",
+ "sp-core",
+ "sp-rpc",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
 name = "pallet-cv-rpc-runtime-api"
 version = "1.0.0"
 dependencies = [
@@ -6796,6 +6819,24 @@ dependencies = [
  "sp-std",
  "sp-version",
  "thiserror",
+]
+
+[[package]]
+name = "sp-consensus-aura"
+version = "0.10.0-dev"
+source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.13#afb74de23dfe2994e7ce38c0870efb9734e966f7"
+dependencies = [
+ "async-trait",
+ "parity-scale-codec 2.3.1",
+ "scale-info",
+ "sp-api",
+ "sp-application-crypto",
+ "sp-consensus",
+ "sp-consensus-slots",
+ "sp-inherents",
+ "sp-runtime",
+ "sp-std",
+ "sp-timestamp",
 ]
 
 [[package]]

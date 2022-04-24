@@ -25,7 +25,7 @@ name = 'appchain-barnacle'
 [dependencies]
 jsonrpc-core = '18.0.0'
 structopt = '0.3.25'
-
+hex-literal = "0.3.4"
 appchain-barnacle-runtime = { path = '../runtime' }
 
 frame-benchmarking = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
@@ -36,6 +36,7 @@ sc-cli = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkad
 sc-client-api = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
 sc-consensus = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
 sc-consensus-babe = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
+sp-consensus-aura = { version = "0.10.0-dev", git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.13" }
 sc-executor = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13', features = ['wasmtime'] }
 sc-finality-grandpa = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
 sc-keystore = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
@@ -55,6 +56,8 @@ sp-finality-grandpa = { git = 'https://github.com/paritytech/substrate.git', bra
 sp-runtime = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
 sp-timestamp = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
 substrate-frame-rpc-system = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
+node-primitives = { version = "2.0.0", git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.13" }
+
 
 serde = { version = '1.0.130', features = ['derive'] }
 
@@ -76,3 +79,7 @@ beefy-gadget-rpc = { git = 'https://github.com/paritytech/substrate.git', branch
 sp-authorship = { git = 'https://github.com/paritytech/substrate.git', branch = 'polkadot-v0.9.13' }
 
 pallet-octopus-appchain = { git = 'https://github.com/octopus-network/octopus-pallets.git', branch = 'release-v0.9.13' }
+
+# SCV Dependencies
+pallet-cv-rpc= { version = "1.0.0", path = "../pallets/cv/rpc" }
+pallet-cv-rpc-runtime-api = { version = "1.0.0", path = "../pallets/cv/rpc/runtime-api" }

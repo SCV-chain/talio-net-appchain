@@ -63,6 +63,8 @@ pub use pallet_cv::Item;
 /// An index to a block.
 pub type BlockNumber = u32;
 
+pub type Time = u64;
+
 /// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
 pub type Signature = MultiSignature;
 
@@ -106,6 +108,20 @@ pub mod opaque {
 			pub beefy: Beefy,
 			pub octopus: OctopusAppchain,
 		}
+	}
+}
+
+pub mod currency {
+	use node_primitives::Balance;
+
+	pub const SCV: Balance = 1_000_000_000_000_000_000;
+	pub const UNITS: Balance = SCV;
+	pub const DOLLARS: Balance = SCV; // 1000_000_000_000
+	pub const CENTS: Balance = DOLLARS / 100; // 10_000_000_000
+	pub const MILLICENTS: Balance = CENTS / 1_000; // 1000_000_000
+
+	pub const fn deposit(items: u32, bytes: u32) -> Balance {
+		items as Balance * 15 * CENTS + (bytes as Balance) * 6 * CENTS
 	}
 }
 
@@ -691,7 +707,6 @@ construct_runtime!(
 		Uniques: pallet_uniques,
 		Sudo: pallet_sudo,
 		//governance pallets
-		//scv-chian pallets
 		Account: pallet_account,
 		Utils: pallet_utils,
 		// SysMan: pallet_sys_man,
@@ -891,6 +906,12 @@ impl_runtime_apis! {
 	impl frame_system_rpc_runtime_api::AccountNonceApi<Block, AccountId, Index> for Runtime {
 		fn account_nonce(account: AccountId) -> Index {
 			System::account_nonce(account)
+		}
+	}
+
+	impl pallet_cv_rpc_runtime_api::CvApi<Block, AccountId, BlockNumber, Time> for Runtime{
+		fn get_cv()->Vec<Item<AccountId, BlockNumber, Time>>{
+			Cv::get_cv()
 		}
 	}
 
